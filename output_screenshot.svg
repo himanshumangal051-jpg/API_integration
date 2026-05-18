@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='128'>
+<rect width='100%' height='100%' fill='white'/>
+<text x='20' y='30' font-family='monospace' font-size='16' fill='black'>Name                 Symbol            Price         Market Cap   24h Change</text>
+<text x='20' y='52' font-family='monospace' font-size='16' fill='black'>------------------------------------------------------------------------------</text>
+<text x='20' y='74' font-family='monospace' font-size='16' fill='black'>Bitcoin              BTC      USD 67000.1234  1,300,000,000,000        2.45%</text>
+<text x='20' y='96' font-family='monospace' font-size='16' fill='black'>Ethereum             ETH      USD 3200.8000     390,000,000,000       -1.12%</text>
+</svg>
