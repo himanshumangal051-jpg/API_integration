@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import crypto_tracker
+import requests
 
 
 class CryptoTrackerTests(unittest.TestCase):
@@ -52,11 +53,15 @@ class CryptoTrackerTests(unittest.TestCase):
 
         self.assertEqual(filtered, [{"name": "B", "market_cap": 250}])
 
+    def test_to_float_handles_none_and_invalid_values(self) -> None:
+        self.assertEqual(crypto_tracker.to_float(None), 0.0)
+        self.assertEqual(crypto_tracker.to_float("not-a-number"), 0.0)
+
     @patch("crypto_tracker.requests.get")
     def test_fetch_market_data_raises_runtime_error_on_request_issue(
         self, mock_get: Mock
     ) -> None:
-        mock_get.side_effect = crypto_tracker.requests.RequestException("timeout")
+        mock_get.side_effect = requests.RequestException("timeout")
 
         with self.assertRaises(RuntimeError):
             crypto_tracker.fetch_market_data(["bitcoin"], "usd")

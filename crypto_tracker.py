@@ -13,6 +13,15 @@ TABLE_CHANGE_WIDTH = 12
 TABLE_COLUMN_SPACES = 4
 
 
+def to_float(value: Any, default: float = 0.0) -> float:
+    try:
+        if value is None:
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def fetch_coin_ids(query: str, timeout: int = DEFAULT_TIMEOUT) -> list[str]:
     try:
         response = requests.get(
@@ -113,9 +122,9 @@ def format_rows(rows: list[dict[str, Any]], currency: str) -> str:
         lines.append(
             f"{str(row.get('name', 'N/A'))[:TABLE_NAME_WIDTH]:{TABLE_NAME_WIDTH}} "
             f"{str(row.get('symbol', 'N/A')).upper()[:TABLE_SYMBOL_WIDTH]:{TABLE_SYMBOL_WIDTH}} "
-            f"{(f'{symbol} {float(row.get('current_price', 0)):.4f}'):>{TABLE_PRICE_WIDTH}} "
-            f"{float(row.get('market_cap', 0)):>{TABLE_MARKET_CAP_WIDTH},.0f} "
-            f"{(f'{float(row.get('price_change_percentage_24h', 0)):.2f}%'):>{TABLE_CHANGE_WIDTH}}"
+            f"{(f'{symbol} {to_float(row.get('current_price')):.4f}'):>{TABLE_PRICE_WIDTH}} "
+            f"{to_float(row.get('market_cap')):>{TABLE_MARKET_CAP_WIDTH},.0f} "
+            f"{(f'{to_float(row.get('price_change_percentage_24h')):.2f}%'):>{TABLE_CHANGE_WIDTH}}"
         )
     return "\n".join(lines)
 
