@@ -5,7 +5,7 @@ import crypto_tracker
 import requests
 
 
-class CryptoTrackerTests(unittest.TestCase):
+class TestCryptoTracker(unittest.TestCase):
     @patch("crypto_tracker.requests.get")
     def test_fetch_coin_ids_filters_by_query(self, mock_get: Mock) -> None:
         mock_response = Mock()
@@ -33,6 +33,20 @@ class CryptoTrackerTests(unittest.TestCase):
 
         self.assertEqual(filtered, [{"name": "B", "market_cap": 200}])
 
+    def test_filter_market_data_applies_threshold_without_limit_cutoff(self) -> None:
+        rows = [
+            {"name": "A", "market_cap": 100},
+            {"name": "B", "market_cap": 200},
+            {"name": "C", "market_cap": 300},
+        ]
+
+        filtered = crypto_tracker.filter_market_data(rows, min_market_cap=200, limit=5)
+
+        self.assertEqual(
+            filtered,
+            [{"name": "B", "market_cap": 200}, {"name": "C", "market_cap": 300}],
+        )
+
     def test_filter_market_data_when_market_cap_filter_is_none(self) -> None:
         rows = [
             {"name": "A", "market_cap": 100},
@@ -56,6 +70,7 @@ class CryptoTrackerTests(unittest.TestCase):
     def test_to_float_handles_none_and_invalid_values(self) -> None:
         self.assertEqual(crypto_tracker.to_float(None), 0.0)
         self.assertEqual(crypto_tracker.to_float("not-a-number"), 0.0)
+        self.assertEqual(crypto_tracker.to_float("123.45"), 123.45)
 
     @patch("crypto_tracker.requests.get")
     def test_fetch_market_data_raises_runtime_error_on_request_issue(
