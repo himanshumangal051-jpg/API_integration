@@ -32,7 +32,7 @@ class CryptoTrackerTests(unittest.TestCase):
 
         self.assertEqual(filtered, [{"name": "B", "market_cap": 200}])
 
-    def test_filter_market_data_without_market_cap_filter(self) -> None:
+    def test_filter_market_data_when_market_cap_filter_is_none(self) -> None:
         rows = [
             {"name": "A", "market_cap": 100},
             {"name": "B", "market_cap": 200},

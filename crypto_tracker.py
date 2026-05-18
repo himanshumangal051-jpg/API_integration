@@ -5,6 +5,12 @@ import requests
 
 COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
 DEFAULT_TIMEOUT = 10
+TABLE_NAME_WIDTH = 20
+TABLE_SYMBOL_WIDTH = 8
+TABLE_PRICE_WIDTH = 15
+TABLE_MARKET_CAP_WIDTH = 18
+TABLE_CHANGE_WIDTH = 12
+TABLE_COLUMN_SPACES = 4
 
 
 def fetch_coin_ids(query: str, timeout: int = DEFAULT_TIMEOUT) -> list[str]:
@@ -88,24 +94,28 @@ def format_rows(rows: list[dict[str, Any]], currency: str) -> str:
     if not rows:
         return "No matching coins found."
 
-    name_width = 20
-    symbol_width = 8
-    price_width = 15
-    market_cap_width = 18
-    change_width = 12
     lines = [
-        f"{'Name':{name_width}} {'Symbol':{symbol_width}} "
-        f"{'Price':>{price_width}} {'Market Cap':>{market_cap_width}} {'24h Change':>{change_width}}",
-        "-" * (name_width + symbol_width + price_width + market_cap_width + change_width + 4),
+        f"{'Name':{TABLE_NAME_WIDTH}} {'Symbol':{TABLE_SYMBOL_WIDTH}} "
+        f"{'Price':>{TABLE_PRICE_WIDTH}} {'Market Cap':>{TABLE_MARKET_CAP_WIDTH}} "
+        f"{'24h Change':>{TABLE_CHANGE_WIDTH}}",
+        "-"
+        * (
+            TABLE_NAME_WIDTH
+            + TABLE_SYMBOL_WIDTH
+            + TABLE_PRICE_WIDTH
+            + TABLE_MARKET_CAP_WIDTH
+            + TABLE_CHANGE_WIDTH
+            + TABLE_COLUMN_SPACES
+        ),
     ]
     symbol = currency.upper()
     for row in rows:
         lines.append(
-            f"{str(row.get('name', 'N/A'))[:name_width]:{name_width}} "
-            f"{str(row.get('symbol', 'N/A')).upper()[:symbol_width]:{symbol_width}} "
-            f"{(f'{symbol} {float(row.get('current_price', 0)):.4f}'):>{price_width}} "
-            f"{float(row.get('market_cap', 0)):>{market_cap_width},.0f} "
-            f"{(f'{float(row.get('price_change_percentage_24h', 0)):.2f}%'):>{change_width}}"
+            f"{str(row.get('name', 'N/A'))[:TABLE_NAME_WIDTH]:{TABLE_NAME_WIDTH}} "
+            f"{str(row.get('symbol', 'N/A')).upper()[:TABLE_SYMBOL_WIDTH]:{TABLE_SYMBOL_WIDTH}} "
+            f"{(f'{symbol} {float(row.get('current_price', 0)):.4f}'):>{TABLE_PRICE_WIDTH}} "
+            f"{float(row.get('market_cap', 0)):>{TABLE_MARKET_CAP_WIDTH},.0f} "
+            f"{(f'{float(row.get('price_change_percentage_24h', 0)):.2f}%'):>{TABLE_CHANGE_WIDTH}}"
         )
     return "\n".join(lines)
 
